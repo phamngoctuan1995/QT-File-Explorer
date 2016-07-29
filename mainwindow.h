@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStack>
 
 namespace Ui {
 class MainWindow;
@@ -16,6 +17,9 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void initModel();
+    void updateNavigator();
+    bool goToPath(const QString &path, bool isNavigation);
     ~MainWindow();
 
 private slots:
@@ -27,11 +31,17 @@ private slots:
 
     void on_le_path_editingFinished();
 
+    void on_btn_back_clicked();
+
+    void on_btn_forward_clicked();
+
 private:
     Ui::MainWindow *ui;
     QCompleter *_pathCompleter;
     QFileSystemModel *_dirModel, *_fileModel;
     QString _oldDir;
+    QStack<QString> *_backWard, *_forWard;
+
 };
 
 #endif // MAINWINDOW_H

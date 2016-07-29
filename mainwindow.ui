@@ -27,14 +27,14 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="btn_back">
               <property name="text">
                <string>Back</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="btn_forward">
               <property name="text">
                <string>Forward</string>
               </property>
@@ -140,8 +140,8 @@
      </layout>
     </item>
    </layout>
-   <zorder>pushButton</zorder>
-   <zorder>pushButton_2</zorder>
+   <zorder>btn_back</zorder>
+   <zorder>btn_forward</zorder>
    <zorder>le_path</zorder>
    <zorder>pushButton_3</zorder>
    <zorder>groupBox</zorder>
