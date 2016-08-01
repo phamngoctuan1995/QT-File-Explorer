@@ -13,8 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    filedelegate.cpp \
+    myfilesystemmodel.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    filedelegate.h \
+    myfilesystemmodel.h
 
 FORMS    += mainwindow.ui

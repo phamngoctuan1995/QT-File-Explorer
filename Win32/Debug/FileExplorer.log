@@ -1,0 +1,4 @@
+﻿  mainwindow.cpp
+mainwindow.cpp(68): warning C4189: 'temp' : local variable is initialized but not referenced
+mainwindow.cpp(137): warning C4100: 'arg1' : unreferenced formal parameter
+  FileExplorer.vcxproj -> C:\Users\CPU10495-local\Documents\QT_projects\FileExplorer\debug\FileExplorer.exe

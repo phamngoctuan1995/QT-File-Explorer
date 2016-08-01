@@ -29,7 +29,7 @@
             <item>
              <widget class="QPushButton" name="btn_back">
               <property name="text">
-               <string>Back</string>
+               <string>Backward</string>
               </property>
              </widget>
             </item>
@@ -61,7 +61,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="btn_refresh">
               <property name="text">
                <string>Refresh</string>
               </property>
@@ -127,12 +127,12 @@
         </item>
         <item>
          <widget class="QTableView" name="tableView">
-          <property name="minimumSize">
-           <size>
-            <width>300</width>
-            <height>0</height>
-           </size>
-          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>true</bool>
+          </attribute>
+          <attribute name="horizontalHeaderHighlightSections">
+           <bool>true</bool>
+          </attribute>
          </widget>
         </item>
        </layout>
@@ -140,18 +140,6 @@
      </layout>
     </item>
    </layout>
-   <zorder>btn_back</zorder>
-   <zorder>btn_forward</zorder>
-   <zorder>le_path</zorder>
-   <zorder>pushButton_3</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>treeView</zorder>
-   <zorder>tableView</zorder>
-   <zorder></zorder>
-   <zorder>treeView</zorder>
-   <zorder>tableView</zorder>
-   <zorder>tableView</zorder>
-   <zorder>treeView</zorder>
    <zorder></zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -159,7 +147,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
  </widget>

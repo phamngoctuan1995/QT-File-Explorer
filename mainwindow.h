@@ -10,6 +10,8 @@ class MainWindow;
 
 class QFileSystemModel;
 class QCompleter;
+class FileDelegate;
+class MyFileSystemModel;
 
 class MainWindow : public QMainWindow
 {
@@ -35,13 +37,18 @@ private slots:
 
     void on_btn_forward_clicked();
 
+    void on_btn_refresh_clicked();
+
+    void on_le_search_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     QCompleter *_pathCompleter;
-    QFileSystemModel *_dirModel, *_fileModel;
+    QFileSystemModel *_dirModel;
+    MyFileSystemModel *_fileModel;
     QString _oldDir;
     QStack<QString> *_backWard, *_forWard;
-
+    FileDelegate * _fileDelegate;
 };
 
 #endif // MAINWINDOW_H
