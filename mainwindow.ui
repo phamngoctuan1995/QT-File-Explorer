@@ -126,13 +126,19 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="tableView">
-          <attribute name="horizontalHeaderVisible">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="horizontalHeaderHighlightSections">
-           <bool>true</bool>
-          </attribute>
+         <widget class="QListView" name="tableView">
+          <property name="gridSize">
+           <size>
+            <width>80</width>
+            <height>80</height>
+           </size>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::IconMode</enum>
+          </property>
+          <property name="modelColumn">
+           <number>0</number>
+          </property>
          </widget>
         </item>
        </layout>

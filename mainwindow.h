@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QStack>
+#include <QModelIndex>
 
 namespace Ui {
 class MainWindow;
@@ -41,6 +42,10 @@ private slots:
 
     void on_le_search_textChanged(const QString &arg1);
 
+    void on_filemodel_loaded(const QString &path);
+
+    void on_tableView_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
     QCompleter *_pathCompleter;
@@ -49,6 +54,7 @@ private:
     QString _oldDir;
     QStack<QString> *_backWard, *_forWard;
     FileDelegate * _fileDelegate;
+    QModelIndex _rootIndex;
 };
 
 #endif // MAINWINDOW_H

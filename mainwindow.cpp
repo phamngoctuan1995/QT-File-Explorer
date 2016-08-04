@@ -8,6 +8,9 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include "myfilesystemmodel.h"
+#include <QModelIndex>
+#include <QMenu>
+#include <QAction>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,13 +42,22 @@ void MainWindow::initModel()
 
     _fileModel = new MyFileSystemModel(this);
     _fileModel->setFilter(QDir::NoDotAndDotDot | QDir::AllEntries);
-    _fileModel->setRootPath(_oldDir);
+    _rootIndex = _fileModel->setRootPath(_oldDir);
     ui->tableView->setModel(_fileModel);
+    _fileModel->_totalRow = 2;
 
     _fileDelegate = new FileDelegate(this);
     ui->tableView->setItemDelegateForColumn(0, _fileDelegate);
     ui->tableView->setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::SelectedClicked);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    connect(_fileModel, SIGNAL(directoryLoaded(QString)), this, SLOT(on_filemodel_loaded(QString)));
+
+    QMenu *contextMenu = new QMenu(ui->tableView);
+    ui->tableView->setContextMenuPolicy(Qt::ActionsContextMenu);
+    ui->tableView->addAction(new QAction("Xoa", contextMenu));
+    ui->tableView->addAction(new QAction("Them", contextMenu));
+//    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+
 }
 
 void MainWindow::updateNavigator()
@@ -59,8 +71,9 @@ bool MainWindow::goToPath(const QString &path, bool isNavigation = false)
     QDir dir(path);
     if (dir.exists())
     {
-//        _fileModel->setRootPath(path);
-        ui->tableView->setRootIndex(_fileModel->setRootPath(path));
+        _rootIndex = _fileModel->setRootPath(path);
+        _fileModel->_currentRow = 0;
+        ui->tableView->setRootIndex(_rootIndex);
         ui->le_path->setText(path);
 
         if (!isNavigation)
@@ -74,6 +87,12 @@ bool MainWindow::goToPath(const QString &path, bool isNavigation = false)
     }
 
     return false;
+}
+
+void MainWindow::on_filemodel_loaded(const QString &path)
+{
+//    ui->tableView->setRootIndex(_rootIndex);
+//    _fileModel->_totalRow = _fileModel->getTotalRow(_rootIndex);
 }
 
 MainWindow::~MainWindow()
@@ -142,3 +161,16 @@ void MainWindow::on_le_search_textChanged(const QString &arg1)
 //    fileModel->findChildren(QRegularExpression(arg1));
 }
 
+
+void MainWindow::on_tableView_customContextMenuRequested(const QPoint &pos)
+{
+    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+
+        // Create menu and insert some actions
+    QMenu myMenu;
+    myMenu.addAction("Insert", this, SLOT(addItem()));
+    myMenu.addAction("Erase",  this, SLOT(eraseItem()));
+
+    // Show context menu at handling position
+    myMenu.exec(globalPos);
+}

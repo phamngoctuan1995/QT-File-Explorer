@@ -15,10 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     filedelegate.cpp \
-    myfilesystemmodel.cpp
+    myfilesystemmodel.cpp \
+    myfilemodel.cpp \
+    mylistview.cpp
 
 HEADERS  += mainwindow.h \
     filedelegate.h \
-    myfilesystemmodel.h
+    myfilesystemmodel.h \
+    myfilemodel.h \
+    mylistview.h
 
 FORMS    += mainwindow.ui
