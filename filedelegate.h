@@ -3,12 +3,17 @@
 
 #include <QStyledItemDelegate>
 
+class QLabel;
+class QString;
+class QMovie;
+class QTimer;
+class QPoint;
+
 class FileDelegate: public QStyledItemDelegate
 {
     Q_OBJECT
-
 public:
-    FileDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent) {}
+    FileDelegate(QWidget *parent);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
                const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -22,6 +27,21 @@ public:
     void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE;
     void setModelData(QWidget *editor, QAbstractItemModel *model,
                       const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) Q_DECL_OVERRIDE;
+
+signals:
+    void MouseOverGif(QString, const QStyleOptionViewItem&, const QModelIndex&) const;
+
+private slots:
+    void GifHint(QString, const QStyleOptionViewItem&, const QModelIndex&);
+//    void HintShow();
+private:
+    QMovie *_gif;
+    QString _oldDir;
+    QLabel *_label;
+    bool _isShow, _isWait;
+    QTimer *_timer;
+    QPoint *_oldPoint;
 };
 
 #endif // FILEDELEGATE_H

@@ -127,17 +127,11 @@
         </item>
         <item>
          <widget class="QListView" name="tableView">
-          <property name="gridSize">
-           <size>
-            <width>80</width>
-            <height>80</height>
-           </size>
+          <property name="resizeMode">
+           <enum>QListView::Adjust</enum>
           </property>
           <property name="viewMode">
-           <enum>QListView::IconMode</enum>
-          </property>
-          <property name="modelColumn">
-           <number>0</number>
+           <enum>QListView::ListMode</enum>
           </property>
          </widget>
         </item>

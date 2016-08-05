@@ -1,4 +1,5 @@
 #include "myfilesystemmodel.h"
+#include <QDebug>
 
 Qt::ItemFlags MyFileSystemModel::flags(const QModelIndex & index) const
 {
@@ -9,6 +10,7 @@ Qt::ItemFlags MyFileSystemModel::flags(const QModelIndex & index) const
 
 QVariant MyFileSystemModel::data(const QModelIndex &index, int role) const
 {
+    qDebug() << index.row();
     return QFileSystemModel::data(index, role);
 }
 

@@ -52,11 +52,13 @@ void MainWindow::initModel()
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     connect(_fileModel, SIGNAL(directoryLoaded(QString)), this, SLOT(on_filemodel_loaded(QString)));
 
-    QMenu *contextMenu = new QMenu(ui->tableView);
-    ui->tableView->setContextMenuPolicy(Qt::ActionsContextMenu);
-    ui->tableView->addAction(new QAction("Xoa", contextMenu));
-    ui->tableView->addAction(new QAction("Them", contextMenu));
+//    QMenu *contextMenu = new QMenu(ui->tableView);
+//    ui->tableView->setContextMenuPolicy(Qt::ActionsContextMenu);
+//    ui->tableView->addAction(new QAction("Xoa", contextMenu));
+//    ui->tableView->addAction(new QAction("Them", contextMenu));
 //    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(_fileModel, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)), ui->tableView, SLOT(dataChanged(QModelIndex,QModelIndex,QVector<int>)));
 
 }
 
@@ -164,13 +166,13 @@ void MainWindow::on_le_search_textChanged(const QString &arg1)
 
 void MainWindow::on_tableView_customContextMenuRequested(const QPoint &pos)
 {
-    QPoint globalPos = ui->tableView->mapToGlobal(pos);
+//    QPoint globalPos = ui->tableView->mapToGlobal(pos);
 
-        // Create menu and insert some actions
-    QMenu myMenu;
-    myMenu.addAction("Insert", this, SLOT(addItem()));
-    myMenu.addAction("Erase",  this, SLOT(eraseItem()));
+//        // Create menu and insert some actions
+//    QMenu myMenu;
+//    myMenu.addAction("Insert", this, SLOT(addItem()));
+//    myMenu.addAction("Erase",  this, SLOT(eraseItem()));
 
-    // Show context menu at handling position
-    myMenu.exec(globalPos);
+//    // Show context menu at handling position
+//    myMenu.exec(globalPos);
 }
