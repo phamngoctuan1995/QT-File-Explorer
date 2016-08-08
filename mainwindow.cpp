@@ -11,6 +11,7 @@
 #include <QModelIndex>
 #include <QMenu>
 #include <QAction>
+#include <QKeyEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -175,4 +176,10 @@ void MainWindow::on_tableView_customContextMenuRequested(const QPoint &pos)
 
 //    // Show context menu at handling position
 //    myMenu.exec(globalPos);
+}
+
+void MainWindow::keyPressEvent(QKeyEvent* e)
+{
+    if (e->key() == Qt::Key_Backspace && !_backWard->isEmpty())
+        on_btn_back_clicked();
 }

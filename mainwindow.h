@@ -23,6 +23,7 @@ public:
     void initModel();
     void updateNavigator();
     bool goToPath(const QString &path, bool isNavigation);
+    void keyPressEvent(QKeyEvent* e);
     ~MainWindow();
 
 private slots:

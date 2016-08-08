@@ -8,6 +8,9 @@ class QString;
 class QMovie;
 class QTimer;
 class QPoint;
+class QVideoWidget;
+class QMediaPlayer;
+class QMediaPlaylist;
 
 class FileDelegate: public QStyledItemDelegate
 {
@@ -30,10 +33,10 @@ public:
     bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index) Q_DECL_OVERRIDE;
 
 signals:
-    void MouseOverGif(QString, const QStyleOptionViewItem&, const QModelIndex&) const;
+    void MouseOverGif(QString, const QStyleOptionViewItem&, const QModelIndex&, int) const;
 
 private slots:
-    void GifHint(QString, const QStyleOptionViewItem&, const QModelIndex&);
+    void GifHint(QString, const QStyleOptionViewItem&, const QModelIndex&, int);
 //    void HintShow();
 private:
     QMovie *_gif;
@@ -42,6 +45,9 @@ private:
     bool _isShow, _isWait;
     QTimer *_timer;
     QPoint *_oldPoint;
+    QVideoWidget *_videoWidget;
+    QMediaPlayer *_mediaPlayer;
+    QMediaPlaylist *_playList;
 };
 
 #endif // FILEDELEGATE_H

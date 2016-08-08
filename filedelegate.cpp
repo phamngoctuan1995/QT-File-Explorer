@@ -18,9 +18,15 @@
 #include <QCursor>
 #include <QTimer>
 #include <QPoint>
+#include <QVideoWidget>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 FileDelegate::FileDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent)
 {
+    _mediaPlayer = new QMediaPlayer;
+    _playList = new QMediaPlaylist(_mediaPlayer);
+    _videoWidget = new QVideoWidget();
     _gif = new QMovie;
     _oldDir = "";
     _label = new QLabel;
@@ -30,56 +36,97 @@ FileDelegate::FileDelegate(QWidget *parent = 0) : QStyledItemDelegate(parent)
     _oldPoint = new QPoint;
     _label->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     _label->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
+    _videoWidget->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
 
-    connect(this, SIGNAL(MouseOverGif(QString, const QStyleOptionViewItem&, const QModelIndex&))
-            , SLOT(GifHint(QString,const QStyleOptionViewItem&, const QModelIndex&)));
+    connect(this, SIGNAL(MouseOverGif(QString, const QStyleOptionViewItem&, const QModelIndex&, int))
+    , SLOT(GifHint(QString,const QStyleOptionViewItem&, const QModelIndex&, int)));
 }
 
-void FileDelegate::GifHint(QString fPath, const QStyleOptionViewItem& option, const QModelIndex& index)
+void FileDelegate::GifHint(QString fPath, const QStyleOptionViewItem& option, const QModelIndex& index, int type)
 {
     if (option.state & QStyle::State_MouseOver)
     {
-      if (_oldDir == fPath)
-          return;
-      else
-          _oldDir = fPath;
+        if (_oldDir == fPath)
+            return;
+        else
+            _oldDir = fPath;
 
-      delete _gif;
-      _gif = new QMovie(fPath);
+        QPoint mouseCursor = QCursor::pos();
+        QSize size;
 
-      if (!_gif->isValid())
-          return;
+        if (type == 2)
+        {
+            _playList->clear();
+            _playList->addMedia(QUrl(fPath));
+            _mediaPlayer->setPlaylist(_playList);
+            _mediaPlayer->setVideoOutput(_videoWidget);
+            _mediaPlayer->setPlaybackRate(5.0);
+            _mediaPlayer->setMuted(true);
+            _mediaPlayer->play();
+            _videoWidget->resize(200, 150);
+            _videoWidget->move(mouseCursor + QPoint(10, 10));
+            _videoWidget->show();
+        }
+        else
+        {
+            _label->move(mouseCursor + QPoint(10, 10));
 
-      QPoint mouseCursor = QCursor::pos();
-//      _gif->setScaledSize(QSize(200, 150));
-      _gif->start();
-      _label->move(mouseCursor + QPoint(10, 10));
-      QSize size = _gif->currentPixmap().scaled(200,200, Qt::KeepAspectRatio).size();
-      _gif->setScaledSize(size);
-      _label->setMovie(_gif);
-      _label->resize(size);
-      _label->show();
-      _isShow = true;
+            if (type == 0)
+            {
+                delete _gif;
+                _gif = new QMovie(fPath);
+
+                if (!_gif->isValid())
+                  return;
+                _gif->start();
+
+                size = _gif->currentPixmap().scaled(200,200, Qt::KeepAspectRatio).size();
+                _gif->setScaledSize(size);
+                _label->setMovie(_gif);
+            }
+            else
+                if (type == 1)
+                {
+                  QPixmap *img = new QPixmap(fPath);
+                  if (img != NULL)
+                  {
+                      *img = img->scaled(200, 200, Qt::KeepAspectRatio);
+                      size = img->size();
+                      _label->setPixmap(*img);
+                  }
+                }
+
+            _label->resize(size);
+            _label->show();
+        }
+        _isShow = true;
     }
     else
-      if (fPath == _oldDir && _isShow)
-      {
-          _isShow = false;
-          _oldDir = "";
-          _label->close();
-      }
+        if (fPath == _oldDir && _isShow)
+        {
+            _isShow = false;
+            _oldDir = "";
+            _label->close();
+            _videoWidget->close();
+        }
 }
 
 void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
-           const QModelIndex &index) const
+const QModelIndex &index) const
 {
-      QStyledItemDelegate::paint(painter, option, index);
+    QStyledItemDelegate::paint(painter, option, index);
 
-      QString fPath = qvariant_cast<QString>(index.data(QFileSystemModel::FilePathRole));
+    QString fPath = qvariant_cast<QString>(index.data(QFileSystemModel::FilePathRole));
 
-      if (fPath.contains(".gif", Qt::CaseInsensitive) || fPath.contains(".png", Qt::CaseInsensitive))
-              emit MouseOverGif(fPath, option, index);
-
+    if (fPath.contains(".gif", Qt::CaseInsensitive))
+        emit MouseOverGif(fPath, option, index, 0);
+    else
+        if (fPath.contains(".jpg", Qt::CaseInsensitive)
+          || fPath.contains(".png", Qt::CaseInsensitive)|| fPath.contains(".b_mediaPlayer", Qt::CaseInsensitive))
+            emit MouseOverGif(fPath, option, index, 1);
+        else
+            if (fPath.contains(".mp4", Qt::CaseInsensitive))
+                emit MouseOverGif(fPath, option, index, 2);
 }
 
 QSize FileDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -90,7 +137,7 @@ QSize FileDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelInd
 }
 
 QWidget* FileDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                      const QModelIndex &index) const
+      const QModelIndex &index) const
 {
     return new QLineEdit(parent);
 }
@@ -106,7 +153,7 @@ void FileDelegate::setEditorData(QWidget *editor, const QModelIndex &index) cons
 }
 
 void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                  const QModelIndex &index) const
+  const QModelIndex &index) const
 {
     if (index.column() == 0)
     {
@@ -116,7 +163,7 @@ void FileDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 }
 
 void FileDelegate::updateEditorGeometry(QWidget *editor,
-    const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
+const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
 {
     editor->setGeometry(option.rect);
 }
